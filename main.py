@@ -15,7 +15,8 @@
 import os
 import sys
 import tempfile
-import requests, json
+import requests
+import json
 from io import BytesIO
 from argparse import ArgumentParser
 import urllib.request
@@ -63,6 +64,7 @@ db.init_app(app)
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -84,9 +86,11 @@ def callback():
 
 """ テキストメッセージが送られた場合
 """
+
+
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    text = event.message.text # 受信したメッセージ
+    text = event.message.text  # 受信したメッセージ
 
     if text == 'profile':
         if isinstance(event.source, SourceUser):
@@ -106,11 +110,13 @@ def message_text(event):
 
 """ BOTと友達になったとき
 """
+
+
 @handler.add(FollowEvent)
 def handle_follow(event):
     user_id = event.source.user_id
     # DBにユーザー情報が未登録のとき, データベースにユーザー追加
-    user = User.query.get(user_id) # ユーザーがDBに存在するか
+    user = User.query.get(user_id)  # ユーザーがDBに存在するか
     if user is None:
         profile = line_bot_api.get_profile(user_id)
         add_user_to_database(user_id, profile.display_name, 0)
@@ -118,6 +124,8 @@ def handle_follow(event):
 
 """ 画像が送られた場合
 """
+
+
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
     display_name = 'None'
@@ -137,20 +145,29 @@ def handle_image_message(event):
 
         """ 画像をGooglePhotoへアップロード [ここから] """
         # LINEサーバーから画像取得
-        try: img_data = photo.get_photo_data(msg_id=event.message.id)
-        except: raise ValueError('LINEサーバーから画像の取得に失敗')
+        try:
+            img_data = photo.get_photo_data(msg_id=event.message.id)
+        except:
+            raise ValueError('LINEサーバーから画像の取得に失敗')
 
         # Google Photoのアクセストークンを取得
-        try: gphoto_access_token = photo.get_gphoto_access_token()
-        except: raise ValueError('Google Photoのアクセストークンを取得に失敗')
+        try:
+            gphoto_access_token = photo.get_gphoto_access_token()
+        except:
+            raise ValueError('Google Photoのアクセストークンを取得に失敗')
 
         # Google Photoへ画像をアップロード
-        try: upload_token = photo.get_gphoto_upload_token(gphoto_access_token, img_data, display_name + '_' + str(counter+1))
-        except: raise ValueError('Google Photoへ画像をアップロードに失敗')
+        try:
+            upload_token = photo.get_gphoto_upload_token(
+                gphoto_access_token, img_data, display_name + '_' + str(counter+1))
+        except:
+            raise ValueError('Google Photoへ画像をアップロードに失敗')
 
         # 画像をGoogle Photoアルバムに追加
-        try: photo.upload_photo(gphoto_access_token, upload_token)
-        except: raise ValueError('画像をGoogle Photoアルバムに追加に失敗')
+        try:
+            photo.upload_photo(gphoto_access_token, upload_token)
+        except:
+            raise ValueError('画像をGoogle Photoアルバムに追加に失敗')
         """ 画像をGooglePhotoへアップロード [ここまで] """
 
         # カウンター(DB)をアップデート
@@ -171,6 +188,8 @@ def handle_image_message(event):
 
 """ スタンプが送られた場合
 """
+
+
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_sticker_message(event):
     try:
@@ -181,7 +200,7 @@ def handle_sticker_message(event):
                 sticker_id=event.message.sticker_id)
         )
     except:
-        print ('このスタンプ持ってない')
+        print('このスタンプ持ってない')
 
 
 """ 位置情報が送られた場合
