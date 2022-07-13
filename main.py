@@ -106,6 +106,9 @@ def message_text(event):
     elif text == 'あいいい':
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='あいいいいいいいい'))
+    else:
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text='テキストの返信は設定していません。写真のみ対応しています。'))
 
 
 """ BOTと友達になったとき
@@ -136,11 +139,15 @@ def handle_image_message(event):
 
     # ユーザーのこれまでの投稿枚数を取得
     counter = get_user_counter(user_id, display_name)
+    line_bot_api.reply_message(
+        event.reply_token, TextSendMessage(text=str(counter+1)+'枚目の写真の投稿を受領しました。'))
     try:
 
         # 写真の投稿枚数の上限を超えている場合
         if counter >= const.PHOTO_POST_LIMIT:
             counter += 1
+            line_bot_api.reply_message(
+                event.reply_token, TextSendMessage(text='すみません。'+str(const.PHOTO_POST_LIMIT)+'枚以降の投稿はできません。'))
             raise PhotoPostLimitationError
 
         """ 画像をGooglePhotoへアップロード [ここから] """
@@ -148,12 +155,16 @@ def handle_image_message(event):
         try:
             img_data = photo.get_photo_data(msg_id=event.message.id)
         except:
+            line_bot_api.reply_message(
+                event.reply_token, TextSendMessage(text='画像取得失敗です'))
             raise ValueError('LINEサーバーから画像の取得に失敗')
 
         # Google Photoのアクセストークンを取得
         try:
             gphoto_access_token = photo.get_gphoto_access_token()
         except:
+            line_bot_api.reply_message(
+                event.reply_token, TextSendMessage(text='アクセストークン取得失敗'))
             raise ValueError('Google Photoのアクセストークンを取得に失敗')
 
         # Google Photoへ画像をアップロード
@@ -161,6 +172,8 @@ def handle_image_message(event):
             upload_token = photo.get_gphoto_upload_token(
                 gphoto_access_token, img_data, display_name + '_' + str(counter+1))
         except:
+            line_bot_api.reply_message(
+                event.reply_token, TextSendMessage(text='アップロード失敗'))
             raise ValueError('Google Photoへ画像をアップロードに失敗')
 
         # 画像をGoogle Photoアルバムに追加
