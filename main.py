@@ -44,7 +44,7 @@ from lib.key import (
     google_photo_refresh_token, sqlalchemy_database_uri
 )
 from lib import const
-from lib import photo
+from lib.photo import GooglePhotoUploader
 from lib.database import (
     db, User, add_user_to_database, get_user_counter, update_user_counter
 )
@@ -69,6 +69,12 @@ with app.app_context():
 # line bot api
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
+
+# AlbumはAPI内で作るしかないらしい？
+gphoto_api = GooglePhotoUploader()
+album_id = gphoto_api.create_new_album("WeddingPhotoContest")
+print(album_id)
+gphoto_api.album_id = album_id
 
 
 @app.route("/callback", methods=['POST'])
@@ -113,8 +119,7 @@ def message_text(event):
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='エコー'))
     elif text == 'access token':
-        gphoto_access_token = photo.get_gphoto_access_token()
-        print(gphoto_access_token)
+        print(gphoto_api.session.verify)
     else:
         print("Nothing")
     #    line_bot_api.reply_message(
@@ -149,7 +154,6 @@ def handle_image_message(event):
 
     # ユーザーのこれまでの投稿枚数を取得
     counter = get_user_counter(user_id, display_name)
-    print(counter)
     try:
 
         # 写真の投稿枚数の上限を超えている場合
@@ -165,33 +169,16 @@ def handle_image_message(event):
             print("Extracting Image...")
             img_content = line_bot_api.get_message_content(event.message.id)
             img_data = BytesIO(img_content.content).read()
-            print(img_data)
         except Exception as e:
             print("Loading Line Message:", e)
             raise ValueError('LINEサーバーから画像の取得に失敗')
 
-        # Google Photoのアクセストークンを取得
+        # Google Photoのアルバムへとアップロード
         try:
-            gphoto_access_token = photo.get_gphoto_access_token()
-        except Exception as e:
-            print("Error at get access token", e)
-            raise ValueError('Google Photoのアクセストークンを取得に失敗')
-
-        # Google Photoへ画像をアップロード
-        try:
-            upload_token = photo.get_gphoto_upload_token(
-                gphoto_access_token, img_data, display_name + '_' + str(counter+1))
-        except:
-            traceback.print_exc()
-            raise ValueError('Google Photoへ画像をアップロードに失敗')
-
-        # 画像をGoogle Photoアルバムに追加
-        try:
-            photo.upload_photo(gphoto_access_token, upload_token)
+            gphoto_api.upload_image_to_album(img_data)
         except:
             traceback.print_exc()
             raise ValueError('画像をGoogle Photoアルバムに追加に失敗')
-        """ 画像をGooglePhotoへアップロード [ここまで] """
 
         # カウンター(DB)をアップデート
         counter = update_user_counter(user_id, display_name)
