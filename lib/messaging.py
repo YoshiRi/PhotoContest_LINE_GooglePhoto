@@ -4,6 +4,7 @@
 
 from lib import const
 
+
 def message_for_posting_a_photo(display_name, counter):
     msg = ''
     # 残り枚数のメッセージ
@@ -12,10 +13,10 @@ def message_for_posting_a_photo(display_name, counter):
         const.THANK_YOU_MESSAGE,
         counter,
         const.PHOTO_POST_LIMIT - counter)
-    last_thank_you_msg = '{}さん、{}\n最後の5枚目の投稿ですね！ご参加いただきありがとうございました(^^)'.format(
+    last_thank_you_msg = '{}さん、{}\n最後の'+str(const.PHOTO_POST_LIMIT)+'枚目の投稿ですね！ご参加いただきありがとうございました(^^)'.format(
         display_name,
         const.THANK_YOU_MESSAGE)
-    stop_msg = '{}さん、{}\nしかし、どうやら既に5枚の写真が投稿されているようです... ごめんなさい。'.format(
+    stop_msg = '{}さん、{}\nしかし、どうやら既に'+str(const.PHOTO_POST_LIMIT)+'枚の写真が投稿されているようです... ごめんなさい。'.format(
         display_name,
         const.THANK_YOU_MESSAGE)
 
