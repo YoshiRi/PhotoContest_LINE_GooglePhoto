@@ -118,8 +118,10 @@ def message_text(event):
     elif text == 'echo':
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='エコー'))
-    elif text == 'access token':
-        print(gphoto_api.session.verify)
+    elif text == 'グーグル' or text == 'Google':
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextMessage(text="Credentials, Sessions = " + str(gphoto_api.credentials.valid)+', '+str(gphoto_api.session.verify)))
     else:
         print("Nothing")
     #    line_bot_api.reply_message(
