@@ -130,6 +130,8 @@ class GooglePhotoUploader():
         Returns:
             string: album_id
         """
+        self.manage_session()  # check and update session status
+
         create_album_body = json.dumps({"album": {"title": album_title}})
         # print(create_album_body)
         resp = session.post(
@@ -153,6 +155,8 @@ class GooglePhotoUploader():
             raw_image (bytes): image to be uploaded
             image_name ([string], optional): image name. Defaults to None.
         """
+        self.manage_session()  # check and update session status
+
         if not image_name:
             image_name = "no_name"
         session = self.session
@@ -204,20 +208,3 @@ class GooglePhotoUploader():
             del(session.headers["X-Goog-Upload-File-Name"])
         except KeyError:
             pass
-
-
-def get_photo_data(msg_id):
-    # LINE から画像を取得
-    url = 'https://api.line.me/v2/bot/message/' + msg_id + '/content'
-    headers = {
-        "Content-Type": "application/json; charset=UTF-8",
-        'Authorization': 'Bearer ' + channel_access_token,
-    }
-    request = urllib.request.Request(url,
-                                     method='GET',
-                                     headers=headers)
-    img_data = None
-    with urllib.request.urlopen(request) as response:
-        img_data = response.read()
-
-    return img_data
