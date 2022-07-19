@@ -120,16 +120,17 @@ class GooglePhotoUploader():
         self.credentials = self.get_credentials(self.credentials_info)
         self.session = self.get_session(self.credentials)
 
-    def create_new_album(self, session, album_title):
+    def create_new_album(self, album_title):
         """ Create named album and return id
         Args:
             session ([type]): session
             album_title ([type]): 
 
         Returns:
-            string: album_id
+            bool : flag 
         """
         self.manage_session()  # check and update session status
+        session = self.session
 
         create_album_body = json.dumps({"album": {"title": album_title}})
         # print(create_album_body)
@@ -141,11 +142,12 @@ class GooglePhotoUploader():
         if "id" in resp:
             logging.info(
                 "Uploading into NEW photo album -- \'{0}\'".format(album_title))
-            return resp['id']
+            self.album_id = resp['id']
+            return True
         else:
             logging.error("Could not find or create photo album '\{0}\'. Server Response: {1}".format(
                 album_title, resp))
-            return None
+            return False
 
     def upload_image_to_album(self, raw_image, image_name=None):
         """[summary]
