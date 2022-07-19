@@ -14,7 +14,8 @@ from lib.key import (
     google_photo_client_id, google_photo_client_secret,
     google_photo_access_token, google_photo_refresh_token
 )
-import google
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
 from google.auth.transport.requests import AuthorizedSession
 import logging
 import os
@@ -39,9 +40,9 @@ class GooglePhotoUploader():
         Create credentials and session.
         """
         self.credentials_info = self.load_credential_info()
-        self.credentials = self.get_credentials(self.credentials_info)
-        self.session = self.get_session(self.credentials)
-
+        self.create_session()
+        if self.session.verify:
+            print("Successfully created Google Photo API Session!")
         self.album_id = GOOGLE_PHOTO_ALBUM_ID
 
     def load_credential_info(self):
@@ -110,16 +111,14 @@ class GooglePhotoUploader():
     def manage_session(self):
         """Verify session status and update if needed
         """
-
-        assert self.session, "No session created!"
-
         if self.session.verify:
-            # session is OK
             return
         else:
-            # reinit session
-            self.credentials = self.get_credentials(self.credentials_info)
-            self.session = self.get_session(self.credentials)
+            self.create_session()
+
+    def create_session(self):
+        self.credentials = self.get_credentials(self.credentials_info)
+        self.session = self.get_session(self.credentials)
 
     def create_new_album(self, session, album_title):
         """ Create named album and return id
@@ -208,3 +207,10 @@ class GooglePhotoUploader():
             del(session.headers["X-Goog-Upload-File-Name"])
         except KeyError:
             pass
+
+
+if __name__ == "__main__":
+    test = GooglePhotoUploader()
+
+    print("Credentials: ", test.credentials.valid)
+    print("Session: ", test.session.verify)
