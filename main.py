@@ -159,8 +159,6 @@ def handle_image_message(event):
         # 写真の投稿枚数の上限を超えている場合
         if counter >= const.PHOTO_POST_LIMIT:
             counter += 1
-            # line_bot_api.reply_message(
-            #    event.reply_token, TextSendMessage(text='すみません。'+str(const.PHOTO_POST_LIMIT)+'枚以降の投稿はできません。'))
             raise PhotoPostLimitationError
 
         """ 画像をGooglePhotoへアップロード [ここから] """
