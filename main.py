@@ -62,6 +62,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 db.init_app(app)
 
+# Assume sqlite:///db/photocontest.db as database
+os.makedirs('db')
 # database生成に必要だった
 with app.app_context():
     db.create_all()
