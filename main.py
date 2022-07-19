@@ -74,9 +74,9 @@ handler = WebhookHandler(channel_secret)
 
 # AlbumはAPI内で作るしかないらしい？
 gphoto_api = GooglePhotoUploader()
-album_id = gphoto_api.create_new_album("WeddingPhotoContest")
-print(album_id)
-gphoto_api.album_id = album_id
+create_album = gphoto_api.create_new_album("WeddingPhotoContest")
+if create_album:
+    print(gphoto_api.album_id)
 
 
 @app.route("/callback", methods=['POST'])
