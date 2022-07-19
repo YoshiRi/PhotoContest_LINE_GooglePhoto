@@ -14,6 +14,7 @@ channel_access_token = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', None)
 google_photo_client_id = os.environ.get('GOOGLE_PHOTO_CLIENT_ID', None)
 google_photo_client_secret = os.environ.get('GOOGLE_PHOTO_CLIENT_SECRET', None)
 google_photo_album_id = os.environ.get('GOOGLE_PHOTO_ALBUM_ID', None)
+google_photo_access_token = os.environ.get('GOOGLE_PHOTO_ACCESS_TOKEN', None)
 google_photo_refresh_token = os.environ.get('GOOGLE_PHOTO_REFRESH_TOKEN', None)
 sqlalchemy_database_uri = os.environ.get('DATABASE_URI', None)
 
@@ -31,6 +32,9 @@ if google_photo_client_secret is None:
     sys.exit(1)
 if google_photo_album_id is None:
     print('Specify GOOGLE_PHOTO_ALBUM_ID as environment variable.')
+    sys.exit(1)
+if google_photo_access_token is None:
+    print('Specify GOOGLE_PHOTO_REFRESH_TOKEN as environment variable.')
     sys.exit(1)
 if google_photo_refresh_token is None:
     print('Specify GOOGLE_PHOTO_REFRESH_TOKEN as environment variable.')
