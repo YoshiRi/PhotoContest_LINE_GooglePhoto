@@ -22,3 +22,5 @@ six
 SQLAlchemy
 urllib3
 Werkzeug
+google
+google-auth-oauthlib
