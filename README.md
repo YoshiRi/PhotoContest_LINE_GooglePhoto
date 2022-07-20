@@ -1,26 +1,47 @@
 # LINE Bot for Photo Contest
 
 
+forked from https://github.com/ichiroex/linebot-photocontest
+
+[参考にしたページ](https://qiita.com/ichiroex/items/5dd6ec89112f88f87159)
+
 ## Requirements
-- python 3.10
+
+- python 3.8 later
+- LINE BOT API
+- Google Photo API
 
 ## Getting started
 
+
+### Python dependencies
+
+```
+pip install -r requirements.txt
+```
+
 ### Set environmental variable
 
+In the your environment following environmental variable should be set
+
 ```
-$ export LINE_CHANNEL_SECRET=YOUR_LINE_CHANNEL_SECRET
-$ export LINE_CHANNEL_ACCESS_TOKEN=YOUR_LINE_CHANNEL_ACCESS_TOKEN
-$ export GOOGLE_PHOTO_CLIENT_ID=YOUR_GOOGLE_PHOTO_CLIENT_ID
-$ export GOOGLE_PHOTO_CLIENT_SECRET=YOUR_GOOGLE_PHOTO_CLIENT_SECRET
-$ export GOOGLE_PHOTO_ALBUM_ID=YOUR_GOOGLE_PHOTO_ALBUM_ID
-$ export GOOGLE_PHOTO_REFRESH_TOKEN=YOUR_GOOGLE_PHOTO_ACCESS_TOKEN
-$ export GOOGLE_PHOTO_REFRESH_TOKEN=YOUR_GOOGLE_PHOTO_REFRESH_TOKEN
-$ export DATABASE_URI=YOUR_DATABASE_URI
-$ pip install -r requirements.txt
+LINE_CHANNEL_SECRET=YOUR_LINE_CHANNEL_SECRET
+LINE_CHANNEL_ACCESS_TOKEN=YOUR_LINE_CHANNEL_ACCESS_TOKEN
+GOOGLE_PHOTO_CLIENT_ID=YOUR_GOOGLE_PHOTO_CLIENT_ID
+GOOGLE_PHOTO_CLIENT_SECRET=YOUR_GOOGLE_PHOTO_CLIENT_SECRET
+GOOGLE_PHOTO_ALBUM_ID=YOUR_GOOGLE_PHOTO_ALBUM_ID
+GOOGLE_PHOTO_REFRESH_TOKEN=YOUR_GOOGLE_PHOTO_ACCESS_TOKEN
+GOOGLE_PHOTO_REFRESH_TOKEN=YOUR_GOOGLE_PHOTO_REFRESH_TOKEN
+DATABASE_URI=YOUR_DATABASE_URI
 ```
 
-or use .env file to  run
+If you want to run in heroku, use heroku config:set command.
+
+```
+heroku config:set VAR=YOUR_VAR
+```
+
+You can use .env file and run following commands to automatically set config.
 
 ```sh
 # linux
@@ -29,6 +50,7 @@ heroku config:set $(cat .env)
 # windows
 FOR /F "usebackq" %i IN (`type .env`) DO heroku config:set %i
 ```
+
 
 
 
@@ -46,8 +68,11 @@ $ git push origin master
 $ git push heroku master
 ```
 
-## How to use Google Photos API
-### AUTH CODEを取得する（ブラウザで開く）
+## How to use Google Photos AP
+
+### AUTH CODEを取得する
+
+
 
 
 ## Database uri sample
