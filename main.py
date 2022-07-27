@@ -197,7 +197,7 @@ def handle_image_message(event):
 
     # メッセージを返却
     print(msg)
-    #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=msg))
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=msg))
 
 
 """ スタンプが送られた場合
