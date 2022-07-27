@@ -124,6 +124,11 @@ def message_text(event):
         line_bot_api.reply_message(
             event.reply_token,
             TextMessage(text="Credentials, Sessions = " + str(gphoto_api.credentials.valid)+', '+str(gphoto_api.session.verify)))
+    elif text == 'albumid':
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextMessage(text="Album id = " + str(gphoto_api.album_id)))
+        print(gphoto_api.album_id)
     else:
         print("Nothing")
     #    line_bot_api.reply_message(
