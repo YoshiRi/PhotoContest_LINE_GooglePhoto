@@ -182,7 +182,7 @@ def handle_image_message(event):
 
         # Google Photoのアルバムへとアップロード
         try:
-            gphoto_api.upload_image_to_album(img_data)
+            gphoto_api.upload_image_to_album(img_data, image_name=display_name)
         except:
             traceback.print_exc()
             raise ValueError('画像をGoogle Photoアルバムに追加に失敗')
