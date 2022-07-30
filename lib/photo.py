@@ -160,6 +160,7 @@ class GooglePhotoUploader():
 
         if not image_name:
             image_name = "no_name"
+        image_name = image_name.encode('utf-8')
         session = self.session
         album_id = self.album_id
 
